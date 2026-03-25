@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NIYANTRA - AI Study Operating System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg: #0B0F1A;
+      --card: #111827;
+      --border: #1F2937;
+      --red: #EF4444;
+      --orange: #F59E0B;
+      --green: #10B981;
+      --blue: #3B82F6;
+      --gray: #9CA3AF;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: #F3F4F6;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4B5563; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    .soft-hover {
+      transition: transform 300ms ease, opacity 300ms ease, border-color 300ms ease, background-color 300ms ease;
+    }
+    .soft-hover:hover {
+      transform: translateY(-2px);
+      opacity: 0.98;
+    }
+    .metric-glow {
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 220px;
+    }
+    .canvas-wrap canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    const STORAGE_KEY = "niyantra_ai_study_os_state";
+    const SUBJECTS = ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science", "English"];
+    const EXAMS = ["JEE", "NEET", "NDA", "KCET"];
+    const MODES = [
+      { key: "learn", label: "Learn Mode", color: "#3B82F6" },
+      { key: "test", label: "Test Mode", color: "#F59E0B" },
+      { key: "revision", label: "Revision Mode", color: "#3B82F6" },
+      { key: "weakness", label: "Weakness Mode", color: "#EF4444" }
+    ];
+
+    const CONTENT_DB = {
+      Mathematics: [
+        {
+          topic: "Quadratic Equations",
+          summary: "Quadratic equations connect factorisation, discriminant logic, graph shape, and root properties in one algebraic system.",
+          steps: [
+            "Write the equation in standard form ax² + bx + c = 0.",
+            "Check whether factorisation is quick; otherwise use the quadratic formula.",
+            "Use the discriminant b² - 4ac to interpret the nature of the roots."
+          ],
+          breakdown: [
+            "Standard form and coefficients",
+            "Discriminant and root nature",
+            "Sum and product of roots"
+          ],
+          examples: [
+            "x² - 7x + 12 = 0 factorises into (x - 3)(x - 4), so the roots are 3 and 4.",
+            "For x² + 4x + 5 = 0, the discriminant is negative, so the roots are complex."
+          ],
+          relevance: {
+            JEE: "High-weight algebra topic. Often linked to inequalities, graphs, and root-based reasoning.",
+            NEET: "Useful for sharpening algebra speed and board-level confidence.",
+            NDA: "Common in aptitude sections where formula recall and quick factorisation matter.",
+            KCET: "Direct formula-based and root-property questions appear frequently."
+          },
+          recall: "What does the discriminant tell you about the roots of a quadratic equation?",
+          recallAnswer: "It tells whether the roots are real and distinct, real and equal, or complex based on the sign of b² - 4ac.",
+          revisionMcq: {
+            prompt: "If b² - 4ac = 0 for a quadratic equation, the roots are:",
+            options: ["Real and distinct", "Real and equal", "Complex conjugates", "Not defined"],
+            answer: "Real and equal",
+            explanation: "A zero discriminant means both roots coincide."
+          },
+          practice: {
+            easy: [
+              {
+                prompt: "Solve x² - 7x + 12 = 0.",
+                type: "mcq",
+                options: ["x = 3, 4", "x = 2, 6", "x = 1, 12", "x = 5, 2"],
+                answer: "x = 3, 4",
+                explanation: "Factorise to (x - 3)(x - 4) = 0.",
+                style: "direct"
+              }
+            ],
+            medium: [
+              {
+                prompt: "For x² - 5x + 6 = 0, what is the sum of the roots?",
+                type: "mcq",
+                options: ["-5", "5", "6", "-6"],
+                answer: "5",
+                explanation: "For ax² + bx + c = 0, sum of roots = -b/a = 5.",
+                style: "reasoning"
+              }
+            ],
+            hard: [
+              {
+                prompt: "Find the discriminant of 2x² - 4x - 6 = 0.",
+                type: "short",
+                answer: "64",
+                explanation: "b² - 4ac = (-4)² - 4(2)(-6) = 16 + 48 = 64.",
+                style: "numerical"
+              }
+            ]
+          }
+        },
+        {
+          topic: "Probability",
+          summary: "Probability measures uncertainty and helps you estimate the chance of events using outcomes, sample spaces, and simple counting.",
+          steps: [
+            "Define the sample space clearly before calculating probability.",
+            "Count favourable outcomes without double counting.",
+            "Use P(Event) = favourable outcomes / total equally likely outcomes."
+          ],
+          breakdown: [
+            "Sample space",
+            "Equally likely outcomes",
+            "Complement and simple counting"
+          ],
+          examples: [
+            "The probability of getting an even number on a fair die is 3/6 = 1/2.",
+            "The probability of not drawing a red ball is the complement of drawing a red ball."
+          ],
+          relevance: {
+            JEE: "Used in discrete reasoning, permutations, and conditional setups.",
+            NEET: "Builds basic quantitative reasoning and board exam readiness.",
+            NDA: "Common in aptitude, especially dice, cards, and selection logic.",
+            KCET: "Straightforward probability and complement questions are common."
+          },
+          recall: "Why is the complement rule helpful in probability?",
+          recallAnswer: "It is often easier to calculate the probability of an event not happening and subtract from 1.",
+          revisionMcq: {
+            prompt: "A fair die is rolled once. What is the probability of getting a prime number?",
+            options: ["1/6", "1/3", "1/2", "2/3"],
+            answer: "1/2",
+            explanation: "Prime numbers on a die are 2, 3, and 5, so 3 favourable outcomes out of 6."
+          },
+          practice: {
+            easy: [
+              {
+                prompt: "A coin is tossed once. What is the probability of getting heads?",
+                type: "mcq",
+                options: ["1/4", "1/3", "1/2", "1"],
+                answer: "1/2",
+                explanation: "Two equally likely outcomes exist: heads or tails.",
+                style: "direct"
+              }
+            ],
+            medium: [
+              {
+                prompt: "A card is drawn from a standard deck. What is the probability that it is a heart?",
+                type: "mcq",
+                options: ["1/2", "1/4", "1/13", "13/26"],
+                answer: "1/4",
+                explanation: "There are 13 hearts in a deck of 52 cards.",
+                style: "reasoning"
+              }
+            ],
+            hard: [
+              {
+                prompt: "How many favourable outcomes are there for getting a sum of 7 when two dice are rolled?",
+                type: "short",
+                answer: "6",
+                explanation: "The combinations are (1,6), (2,5), (3,4), (4,3), (5,2), and (6,1).",
+                style: "numerical"
+              }
+            ]
+          }
+        }
+      ],
+      Physics: [
+        {
+          topic: "Laws of Motion",
+          summary: "Newton's laws connect force, mass, acceleration, and interaction to explain why objects move or resist motion.",
+          steps: [
+            "Identify all forces acting on the body.",
+            "Draw a free body diagram before writing equations.",
+            "Apply Newton's second law along each useful direction."
+          ],
+          breakdown: [
+            "Inertia and balanced forces",
+            "F = ma in vector form",
+            "Action-reaction force pairs"
+          ],
+          examples: [
+            "If a 2 kg object accelerates at 3 m/s², the net force is 6 N.",
+            "A book on a table experiences equal and opposite normal force and weight, so it stays at rest."
+          ],
+          relevance: {
+            JEE: "Core mechanics topic used everywhere from blocks to pulleys and friction.",
+            NEET: "Strong NCERT concept area with direct law-based MCQs.",
+            NDA: "Frequently asked in applied physics and motion aptitude questions.",
+            KCET: "Direct formula use and force-balance logic are common."
+          },
+          recall: "Why do action-reaction forces not cancel each other on the same object?",
+          recallAnswer: "They act on different bodies, so they do not cancel on a single object's free body diagram.",
+          revisionMcq: {
+            prompt: "Newton's second law states that net force is equal to:",
+            options: ["mass × velocity", "mass × acceleration", "weight ÷ area", "impulse × time"],
+            answer: "mass × acceleration",
+            explanation: "Newton's second law is F = ma."
+          },
+          practice: {
+            easy: [
+              {
+                prompt: "A 5 kg body accelerates at 2 m/s². What is the net force?",
+                type: "mcq",
+                options: ["2 N", "5 N", "10 N", "20 N"],
+                answer: "10 N",
+                explanation: "F = ma = 5 × 2 = 10 N.",
+                style: "direct"
+              }
+            ],
+            medium: [
+              {
+                prompt: "A box remains at rest on the floor. Which statement is correct?",
+                type: "mcq",
+                options: [
+                  "No forces act on the box",
+                  "Weight is larger than the normal force",
+                  "Weight and normal force balance each other",
+                  "The box has acceleration but no velocity"
+                ],
+                answer: "Weight and normal force balance each other",
+                explanation: "Rest implies zero acceleration, so net force is zero.",
+                style: "reasoning"
+              }
+            ],
+            hard: [
+              {
+                prompt: "A net force of 24 N acts on a 3 kg body. Find the acceleration.",
+                type: "short",
+                answer: "8",
+                explanation: "a = F/m = 24/3 = 8 m/s².",
+                style: "numerical"
+              }
+            ]
+          }
+        },
+        {
+          topic: "Current Electricity",
+          summary: "Current electricity explains charge flow, resistance, potential difference, and how circuit elements respond in series and parallel.",
+          steps: [
+            "Use Ohm's law to connect voltage, current, and resistance.",
+            "Reduce the circuit step by step using series and parallel rules.",
+            "Check units carefully: ampere, volt, and ohm."
+          ],
+          breakdown: [
+            "Ohm's law",
+            "Series and parallel resistance",
+            "Power and electrical energy"
+          ],
+          examples: [
+            "A 12 V battery across a 6 Ω resistor produces 2 A current.",
+            "Two 2 Ω resistors in series give 4 Ω equivalent resistance."
+          ],
+          relevance: {
+            JEE: "Very important for circuit reduction, Kirchhoff logic, and mixed reasoning.",
+            NEET: "NCERT-focused formulas and simple equivalent resistance questions are standard.",
+            NDA: "Direct electrical aptitude and formula use are common.",
+            KCET: "Resistor combinations and power relations appear regularly."
+          },
+          recall: "What happens to total resistance when equal resistors are connected in parallel?",
+          recallAnswer: "The equivalent resistance becomes smaller than the smallest individual resistor.",
+          revisionMcq: {
+            prompt: "Two 3 Ω resistors in series have an equivalent resistance of:",
+            options: ["1.5 Ω", "3 Ω", "6 Ω", "9 Ω"],
+            answer: "6 Ω",
+            explanation: "Series resistances add directly."
+          },
+          practice: {
+            easy: [
+              {
+                prompt: "If V = 10 V and R = 5 Ω, what is the current?",
+                type: "mcq",
+                options: ["0.5 A", "2 A", "5 A", "10 A"],
+                answer: "2 A",
+                explanation: "I = V/R = 10/5 = 2 A.",
+                style: "direct"
+              }
+            ],
+            medium: [
+              {
+                prompt: "What is the equivalent resistance of 6 Ω and 3 Ω in parallel?",
+                type: "mcq",
+                options: ["9 Ω", "2 Ω", "3 Ω", "18 Ω"],
+                answer: "2 Ω",
+                explanation: "1/R = 1/6 + 1/3 = 3/6, so R = 2 Ω.",
+                style: "reasoning"
+              }
+            ],
+            hard: [
+              {
+                prompt: "A 12 V source drives 3 A current. Find the circuit resistance.",
+                type: "short",
+                answer: "4",
+                explanation: "R = V/I = 12/3 = 4 Ω.",
+                style: "numerical"
+              }
+            ]
+          }
+        }
+      ],
+      Chemistry: [
+        {
+          topic: "Mole Concept",
+          summary: "The mole concept links atomic-scale particles with laboratory-scale mass using molar mass and Avogadro's number.",
+          steps: [
+            "Convert mass to moles using moles = mass / molar mass.",
+            "Convert moles to particles using Avogadro's number.",
+            "Track units carefully when moving between grams, moles, and molecules."
+          ],
+          breakdown: [
+            "Molar mass",
+            "Avogadro's number",
+            "Mass-mole-particle conversions"
+          ],
+          examples: [
+            "18 g of water is 1 mole because the molar mass of water is 18 g/mol.",
+            "1 mole of any substance contains 6.022 × 10²³ entities."
+          ],
+          relevance: {
+            JEE: "Foundational for stoichiometry, gas laws, and physical chemistry numericals.",
+            NEET: "NCERT-based direct conversions are very common.",
+            NDA: "Useful for basic science reasoning and quantitative chemistry.",
+            KCET: "Formula-driven mole conversion questions appear often."
+          },
+          recall: "What does one mole of a substance represent?",
+          recallAnswer: "It represents 6.022 × 10²³ particles of that substance.",
+          revisionMcq: {
+            prompt: "How many moles are present in 44 g of CO₂?",
+            options: ["0.5", "1", "2", "44"],
+            answer: "1",
+            explanation: "Molar mass of CO₂ is 44 g/mol, so 44 g corresponds to 1 mole."
+          },
+          practice: {
+            easy: [
+              {
+                prompt: "What is the molar mass of O₂?",
+                type: "mcq",
+                options: ["16 g/mol", "18 g/mol", "32 g/mol", "64 g/mol"],
+                answer: "32 g/mol",
+                explanation: "Oxygen gas contains two oxygen atoms: 16 + 16 = 32 g/mol.",
+                style: "direct"
+              }
+            ],
+            medium: [
+              {
+                prompt: "How many molecules are present in 2 moles of a substance?",
+                type: "mcq",
+                options: ["6.022 × 10²³", "1.2044 × 10²⁴", "3.011 × 10²³", "2 × 10²²"],
+                answer: "1.2044 × 10²⁴",
+                explanation: "Multiply 2 by Avogadro's number.",
+                style: "reasoning"
+              }
+            ],
+            hard: [
+              {
+                prompt: "Find the number of moles in 9 g of water.",
+                type: "short",
+                answer: "0.5",
+                explanation: "Moles = mass / molar mass = 9/18 = 0.5 mol.",
+                style: "numerical"
+              }
+            ]
+          }
+        },
+        {
+          topic: "Chemical Bonding",
+          summary: "Chemical bonding explains why atoms combine and how bond type influences shape, polarity, and reactivity.",
+          steps: [
+            "Check electron configuration and valence electrons first.",
+            "Determine whether electrons are transferred or shared.",
+            "Use bond type to infer polarity and physical behaviour."
+          ],
+          breakdown: [
+            "Ionic vs covalent bonding",
+            "Valence electrons and octet",
+            "Bond polarity"
+          ],
+          examples: [
+            "NaCl is ionic because sodium transfers one electron to chlorine.",
+            "Water is covalent but polar because the shared electrons are unequally distributed."
+          ],
+          relevance: {
+            JEE: "Links to periodicity, structure, hybridisation, and molecular properties.",
+            NEET: "High-yield NCERT area with predictable conceptual MCQs.",
+            NDA: "Useful for core science awareness questions.",
+            KCET: "Direct concept and bond-type questions are frequent."
+          },
+          recall: "What is the main difference between ionic and covalent bonding?",
+          recallAnswer: "Ionic bonding involves electron transfer, while covalent bonding involves electron sharing.",
+          revisionMcq: {
+            prompt: "Which compound is predominantly ionic?",
+            options: ["H₂O", "CO₂", "NaCl", "CH₄"],
+            answer: "NaCl",
+            explanation: "NaCl forms by electron transfer between a metal and a non-metal."
+          },
+          practice: {
+            easy: [
+              {
+                prompt: "Which bond is formed by sharing electrons?",
+                type: "mcq",
+                options: ["Ionic", "Metallic", "Covalent", "Hydrogen"],
+                answer: "Covalent",
+                explanation: "Covalent bonding forms when atoms share electrons.",
+                style: "direct"
+              }
+            ],
+            medium: [
+              {
+                prompt: "Why is H₂O considered polar?",
+                type: "mcq",
+                options: [
+                  "Because it is ionic",
+                  "Because oxygen is more electronegative and the molecule is bent",
+                  "Because hydrogen has no electrons",
+                  "Because it has two covalent bonds only"
+                ],
+                answer: "Because oxygen is more electronegative and the molecule is bent",
+                explanation: "Polarity depends on bond polarity and geometry.",
+                style: "reasoning"
+              }
+            ],
+            hard: [
+              {
+                prompt: "How many valence electrons does oxygen have?",
+                type: "short",
+                answer: "6",
+                explanation: "Oxygen belongs to group 16, so it has 6 valence electrons.",
+                style: "numerical"
+              }
+            ]
+          }
+        }
+      ],
+      Biology: [
+        {
+          topic: "Cell Biology",
+          summary: "Cell biology studies the structure and function of the cell, the fundamental unit of life.",
+          steps: [
+            "Understand the role of the cell membrane and transport.",
+            "Map each organelle to its major function.",
+            "Compare prokaryotic and eukaryotic cell organisation."
+          ],
+          breakdown: [
+            "Cell membrane and transport",
+            "Organelles and functions",
+            "Prokaryotic vs eukaryotic cells"
+          ],
+          examples: [
+            "Mitochondria are called the powerhouse because they generate ATP.",
+            "Ribosomes are responsible for protein synthesis."
+          ],
+          relevance: {
+            JEE: "Helpful mainly for broader science grounding and board support.",
+            NEET: "Extremely high-yield NCERT chapter with many direct questions.",
+            NDA: "Common in general science sections.",
+            KCET: "Cell organelles and definitions appear often."
+          },
+          recall: "Which organelle is mainly responsible for ATP production in eukaryotic cells?",
+          recallAnswer: "Mitochondria are mainly responsible for ATP production.",
+          revisionMcq: {
+            prompt: "Which organelle is known as the powerhouse of the cell?",
+            options: ["Golgi body", "Mitochondrion", "Ribosome", "Lysosome"],
+            answer: "Mitochondrion",
+            explanation: "Mitochondria produce ATP for cellular activity."
+          },
+          practice
