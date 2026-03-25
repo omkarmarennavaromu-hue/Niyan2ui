@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — NIYANTRA</title>
+  <meta name="description" content="Login to NIYANTRA and set up your AI discipline and learning profile." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: "#0B1220",
+            greyblock: "#1A2333",
+            card: "#121A28",
+            cream: "#F5EBD8",
+            accent: "#F4A261",
+            danger: "#B91C1C",
+            success: "#166534"
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            accent: ["Poppins", "sans-serif"]
+          },
+          boxShadow: {
+            glow: "0 0 0 1px rgba(244,162,97,.18), 0 22px 60px rgba(0,0,0,.28)",
+            soft: "0 18px 50px rgba(0,0,0,.24)",
+            accent: "0 0 0 1px rgba(244,162,97,.22), 0 12px 30px rgba(244,162,97,.12)"
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(244,162,97,.10), transparent 22%),
+        radial-gradient(circle at 80% 20%, rgba(245,235,216,.05), transparent 24%),
+        #0B1220;
+    }
+
+    .page-enter {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .page-enter.ready {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all .65s ease;
+    }
+
+    .glass {
+      background: rgba(26, 35, 51, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(245, 235, 216, 0.08);
+    }
+
+    .premium-border {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .premium-border::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(120deg, rgba(244,162,97,.26), rgba(245,235,216,.10), rgba(244,162,97,.18));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: .8;
+      animation: borderGlow 4s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes borderGlow {
+      0% { opacity: .62; }
+      50% { opacity: .92; }
+      100% { opacity: .62; }
+    }
+
+    .nav-link {
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -7px;
+      width: 100%;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(244,162,97,.95), transparent);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform .3s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      transform: scaleX(1);
+    }
+
+    .input-field {
+      width: 100%;
+      border-radius: 1rem;
+      border: 1px solid rgba(245,235,216,.10);
+      background: rgba(18,26,40,.88);
+      color: #F5EBD8;
+      padding: .95rem 1rem;
+      outline: none;
+      transition: all .3s ease;
+    }
+
+    .input-field::placeholder {
+      color: rgba(245,235,216,.38);
+    }
+
+    .input-field:focus {
+      border-color: rgba(244,162,97,.65);
+      box-shadow: 0 0 0 1px rgba(244,162,97,.22), 0 0 24px rgba(244,162,97,.10);
+    }
+
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all .6s ease;
+    }
+
+    [data-reveal].show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="bg-navy text-cream overflow-x-hidden selection:bg-accent/30 selection:text-cream">
+  <div class="page-enter min-h-screen flex flex-col">
+    <header class="sticky top-0 z-50 border-b border-cream/10">
+      <div class="glass premium-border mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+          <a href="index.html" class="font-display text-xl font-bold tracking-[0.18em] text-cream">NIYANTRA</a>
+
+          <nav class="hidden md:flex items-center gap-8 text-sm text-cream/80">
+            <a href="index.html" class="nav-link hover:text-accent transition-all duration-300">Home</a>
+            <a href="about.html" class="nav-link hover:text-accent transition-all duration-300">About</a>
+            <a href="features.html" class="nav-link hover:text-accent transition-all duration-300">Features</a>
+            <a href="login.html" class="nav-link active hover:text-accent transition-all duration-300">Login</a>
+          </nav>
+
+          <button id="mobileMenuBtn" class="md:hidden rounded-xl border border-cream/10 bg-greyblock/80 p-2 text-cream/90 transition-all duration-300 hover:border-accent/50 hover:text-accent" aria-label="Toggle navigation menu">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+
+        <div id="mobileMenu" class="hidden md:hidden border-t border-cream/10 py-4">
+          <div class="flex flex-col gap-4 text-sm text-cream/80">
+            <a href="index.html" class="hover:text-accent transition-all duration-300">Home</a>
+            <a href="about.html" class="hover:text-accent transition-all duration-300">About</a>
+            <a href="features.html" class="hover:text-accent transition-all duration-300">Features</a>
+            <a href="login.html" class="text-accent transition-all duration-300">Login</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <section class="mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl items-center gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:px-8">
+        <div class="order-2 lg:order-1" data-reveal>
+          <div class="max-w-xl">
+            <p class="font-accent text-sm uppercase tracking-[0.3em] text-accent">Access NIYANTRA</p>
+            <h1 class="mt-4 font-display text-4xl font-bold leading-tight text-cream sm:text-5xl lg:text-6xl">
+              Enter your discipline system.
+            </h1>
+            <p class="mt-6 text-base leading-8 text-cream/70 sm:text-lg">
+              Create your learning profile, choose your exam target, and continue into a clean AI-powered dashboard built for focused students.
+            </p>
+
+            <div class="mt-8 grid gap-4 sm:grid-cols-2">
+              <div class="glass premium-border rounded-2xl p-5 shadow-soft transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
+                <p class="text-sm uppercase tracking-[0.22em] text-cream/50">System</p>
+                <p class="mt-3 font-display text-2xl font-semibold text-cream">Minimal</p>
+                <p class="mt-2 text-sm leading-7 text-cream/70">Premium interface without visual noise.</p>
+              </div>
+              <div class="glass premium-border rounded-2xl p-5 shadow-soft transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
+                <p class="text-sm uppercase tracking-[0.22em] text-cream/50">Profile</p>
+                <p class="mt-3 font-display text-2xl font-semibold text-cream">Local</p>
+                <p class="mt-2 text-sm leading-7 text-cream/70">Your details are stored in localStorage only.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-1 lg:order-2" data-reveal>
+          <div class="glass premium-border mx-auto w-full max-w-2xl rounded-[2rem] p-5 shadow-soft sm:p-8">
+            <div class="mb-8">
+              <p class="text-sm uppercase tracking-[0.22em] text-cream/50">Login / Signup</p>
+              <h2 class="mt-3 font-display text-3xl font-bold text-cream">Set up your student profile</h2>
+              <p class="mt-3 text-sm leading-7 text-cream/65">
+                Fake auth flow. No backend. Profile is stored locally and redirects to dashboard.
+              </p>
+            </div>
+
+            <form id="loginForm" class="space-y-5">
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div class="sm:col-span-2">
+                  <label for="name" class="mb-2 block text-sm font-medium text-cream/80">Name</label>
+                  <input id="name" type="text" class="input-field" placeholder="Enter your full name" />
+                </div>
+
+                <div>
+                  <label for="studentClass" class="mb-2 block text-sm font-medium text-cream/80">Class</label>
+                  <select id="studentClass" class="input-field">
+                    <option value="">Select class</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option selected>12</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="stream" class="mb-2 block text-sm font-medium text-cream/80">Stream</label>
+                  <select id="stream" class="input-field">
+                    <option value="">Select stream</option>
+                    <option>PCM</option>
+                    <option>PCB</option>
+                    <option>CS</option>
+                    <option>Commerce</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="examTarget" class="mb-2 block text-sm font-medium text-cream/80">Exam target</label>
+                  <select id="examTarget" class="input-field">
+                    <option value="">Select exam target</option>
+                    <option>JEE</option>
+                    <option>KCET</option>
+                    <option>NEET</option>
+                    <option>NDA</option>
+                    <option>UPSC</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="weakSubject" class="mb-2 block text-sm font-medium text-cream/80">Weak subject</label>
+                  <input id="weakSubject" type="text" class="input-field" placeholder="Physics / Maths / Biology..." />
+                </div>
+              </div>
+
+              <div id="statusMessage" class="hidden rounded-2xl border px-4 py-3 text-sm"></div>
+
+              <div class="grid gap-3 pt-2 sm:grid-cols-2">
+                <button
+                  type="button"
+                  id="googleBtn"
+                  class="inline-flex w-full items-center justify-center gap-3 rounded-2xl border border-cream/10 bg-greyblock/80 px-5 py-3.5 font-medium text-cream transition-all duration-300 hover:scale-[1.02] hover:border-accent/50 hover:text-accent hover:shadow-lg"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="h-5 w-5">
+                    <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.654 32.657 29.209 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.277 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.651-.389-3.917z"/>
+                    <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 16.109 19.001 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.277 4 24 4c-7.682 0-14.347 4.337-17.694 10.691z"/>
+                    <path fill="#4CAF50" d="M24 44c5.176 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.149 35.091 26.715 36 24 36c-5.188 0-9.626-3.331-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+                    <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.084 5.57l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.651-.389-3.917z"/>
+                  </svg>
+                  Continue with Google
+                </button>
+
+                <button
+                  type="submit"
+                  class="inline-flex w-full items-center justify-center rounded-2xl bg-cream px-5 py-3.5 font-semibold text-navy transition-all duration-300 hover:scale-[1.02] hover:bg-accent hover:shadow-accent"
+                >
+                  Continue with Email
+                </button>
+              </div>
+            </form>
+
+            <div class="mt-6 rounded-2xl border border-cream/10 bg-greyblock/50 px-4 py-4 text-sm leading-7 text-cream/60">
+              This is a frontend-only fake auth flow. Your details are saved locally in your browser and used to personalize the dashboard.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector(".page-enter").classList.add("ready");
+
+      const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+
+      mobileMenuBtn?.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add("show");
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll("[data-reveal]").forEach((el) => observer.observe(el));
+
+      const form = document.getElementById("loginForm");
+      const googleBtn = document.getElementById("googleBtn");
+      const statusMessage = document.getElementById("statusMessage");
+
+      const nameInput = document.getElementById("name");
+      const classInput = document.getElementById("studentClass");
+      const streamInput = document.getElementById("stream");
+      const examTargetInput = document.getElementById("examTarget");
+      const weakSubjectInput = document.getElementById("weakSubject");
+
+      function showMessage(type, text) {
+        statusMessage.classList.remove("hidden", "border-danger/40", "bg-danger/10", "text-danger", "border-success/40", "bg-success/10", "text-cream");
+        if (type === "error") {
+          statusMessage.classList.add("border-danger/40", "bg-danger/10", "text-danger");
+        } else {
+          statusMessage.classList.add("border-success/40", "bg-success/10", "text-cream");
+        }
+        statusMessage.textContent = text;
+      }
+
+      function saveUserAndRedirect(source) {
+        const userProfile = {
+          name: nameInput.value.trim(),
+          studentClass: classInput.value,
+          stream: streamInput.value,
+          examTarget: examTargetInput.value,
+          weakSubject: weakSubjectInput.value.trim(),
+          authSource: source,
+          loggedIn: true,
+          updatedAt: new Date().toISOString()
+        };
+
+        localStorage.setItem("niyantraUser", JSON.stringify(userProfile));
+        localStorage.setItem("niyantraLoggedIn", "true");
+        showMessage("success", "Profile saved. Redirecting to dashboard...");
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 700);
+      }
+
+      function validateFields() {
+        if (!nameInput.value.trim()) {
+          showMessage("error", "Please enter your name.");
+          nameInput.focus();
+          return false;
+        }
+        if (!classInput.value) {
+          showMessage("error", "Please select your class.");
+          classInput.focus();
+          return false;
+        }
+        if (!streamInput.value) {
+          showMessage("error", "Please select your stream.");
+          streamInput.focus();
+          return false;
+        }
+        if (!examTargetInput.value) {
+          showMessage("error", "Please select your exam target.");
+          examTargetInput.focus();
+          return false;
+        }
+        if (!weakSubjectInput.value.trim()) {
+          showMessage("error", "Please enter your weak subject.");
+          weakSubjectInput.focus();
+          return false;
+        }
+        return true;
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!validateFields()) return;
+        saveUserAndRedirect("email");
+      });
+
+      googleBtn.addEventListener("click", () => {
+        if (!nameInput.value.trim()) nameInput.value = "Omkar R Marennavar";
+        if (!classInput.value) classInput.value = "12";
+        if (!streamInput.value) streamInput.value = "PCM";
+        if (!examTargetInput.value) examTargetInput.value = "NDA";
+        if (!weakSubjectInput.value.trim()) weakSubjectInput.value = "Physics";
+        saveUserAndRedirect("google");
+      });
+
+      const existingUser = localStorage.getItem("niyantraUser");
+      if (existingUser) {
+        try {
+          const user = JSON.parse(existingUser);
+          if (user?.name) nameInput.value = user.name;
+          if (user?.studentClass) classInput.value = user.studentClass;
+          if (user?.stream) streamInput.value = user.stream;
+          if (user?.examTarget) examTargetInput.value = user.examTarget;
+          if (user?.weakSubject) weakSubjectInput.value = user.weakSubject;
+        } catch (err) {}
+      }
+    });
+  </script>
+</body>
+</html>
