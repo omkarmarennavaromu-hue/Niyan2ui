@@ -1,0 +1,390 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>NIYANTRA - AI Study Operating System</title>  
+    <script src="https://cdn.tailwindcss.com"></script>  
+    <script>  
+        tailwind.config = {  
+            theme: {  
+                extend: {  
+                    colors: {  
+                        'primary-bg': '#0B0F1A',  
+                        'card-bg': '#111827',  
+                        'border-color': '#1F2937',  
+                        'weak-red': '#EF4444',  
+                        'warning-orange': '#F59E0B',  
+                        'success-green': '#10B981',  
+                        'active-blue': '#3B82F6',  
+                        'secondary-gray': '#9CA3AF'  
+                    }  
+                }  
+            }  
+        }  
+    </script>  
+    <style>  
+        * { transition: all 300ms ease; }  
+        .sidebar-hidden { transform: translateX(-100%); }  
+        .lift-hover:hover { transform: translateY(-2px); }  
+        .canvas-container { width: 100%; height: 200px; }  
+    </style>  
+</head>  
+<body class="bg-primary-bg text-white font-sans min-h-screen overflow-hidden">  
+    <div class="flex h-screen">  
+        <!-- LEFT SIDEBAR -->  
+        <div id="sidebar" class="w-64 bg-card-bg border-r border-border-color flex flex-col p-6 fixed h-full lg:static lg:translate-x-0 sidebar-hidden z-40 lg:z-auto">  
+            <!-- Profile -->  
+            <div class="mb-8">  
+                <div class="w-16 h-16 bg-active-blue rounded-full flex items-center justify-center text-xl font-bold mb-3">N</div>  
+                <input id="profileName" type="text" placeholder="Your Name" class="w-full bg-transparent border-b border-secondary-gray text-white placeholder-secondary-gray py-2 focus:outline-none focus:border-active-blue">  
+            </div>  
+  
+            <!-- Class Selector -->  
+            <div class="mb-6">  
+                <label class="text-sm text-secondary-gray mb-2 block">Class</label>  
+                <select id="classSelect" class="w-full bg-card-bg border border-secondary-gray rounded-lg p-3 text-white focus:outline-none focus:border-active-blue">  
+                    <option value="6">Class 6</option>  
+                    <option value="7">Class 7</option>  
+                    <option value="8">Class 8</option>  
+                    <option value="9">Class 9</option>  
+                    <option value="10">Class 10</option>  
+                    <option value="11">Class 11</option>  
+                    <option value="12" selected>Class 12</option>  
+                </select>  
+            </div>  
+  
+            <!-- Exam Selector -->  
+            <div class="mb-6">  
+                <label class="text-sm text-secondary-gray mb-2 block">Exam</label>  
+                <select id="examSelect" class="w-full bg-card-bg border border-secondary-gray rounded-lg p-3 text-white focus:outline-none focus:border-active-blue">  
+                    <option value="JEE">JEE</option>  
+                    <option value="NEET">NEET</option>  
+                    <option value="NDA">NDA</option>  
+                    <option value="KCET">KCET</option>  
+                </select>  
+            </div>  
+  
+            <!-- Subjects -->  
+            <div class="flex-1">  
+                <label class="text-sm text-secondary-gray mb-4 block">Subjects</label>  
+                <div id="subjectsList" class="space-y-2">  
+                    <button class="w-full text-left p-3 rounded-lg border border-transparent hover:border-active-blue hover:bg-active-blue/10 subject-btn" data-subject="Mathematics">📐 Mathematics</button>  
+                    <button class="w-full text-left p-3 rounded-lg border border-transparent hover:border-active-blue hover:bg-active-blue/10 subject-btn" data-subject="Physics">⚛️ Physics</button>  
+                    <button class="w-full text-left p-3 rounded-lg border border-transparent hover:border-active-blue hover:bg-active-blue/10 subject-btn" data-subject="Chemistry">🧪 Chemistry</button>  
+                    <button class="w-full text-left p-3 rounded-lg border border-transparent hover:border-active-blue hover:bg-active-blue/10 subject-btn" data-subject="Biology">🧬 Biology</button>  
+                    <button class="w-full text-left p-3 rounded-lg border border-transparent hover:border-active-blue hover:bg-active-blue/10 subject-btn" data-subject="Computer Science">💻 Computer Science</button>  
+                    <button class="w-full text-left p-3 rounded-lg border border-transparent hover:border-active-blue hover:bg-active-blue/10 subject-btn" data-subject="English">📚 English</button>  
+                </div>  
+            </div>  
+  
+            <!-- Mode Buttons -->  
+            <div class="mt-8 space-y-2 pt-8 border-t border-secondary-gray">  
+                <button id="learnMode" class="w-full p-3 rounded-lg bg-active-blue/20 hover:bg-active-blue/30 mode-btn active">📚 Learn Mode</button>  
+                <button id="testMode" class="w-full p-3 rounded-lg bg-transparent border border-secondary-gray hover:border-active-blue hover:bg-active-blue/10 mode-btn">🧪 Test Mode</button>  
+                <button id="revisionMode" class="w-full p-3 rounded-lg bg-transparent border border-secondary-gray hover:border-active-blue hover:bg-active-blue/10 mode-btn">🔄 Revision</button>  
+                <button id="weaknessMode" class="w-full p-3 rounded-lg bg-transparent border border-secondary-gray hover:border-active-blue hover:bg-active-blue/10 mode-btn">⚠️ Weak Areas</button>  
+            </div>  
+        </div>  
+  
+        <!-- Mobile Menu Button -->  
+        <button id="mobileMenuBtn" class="lg:hidden fixed top-6 left-6 z-50 p-3 bg-card-bg rounded-xl border border-secondary-gray">  
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">  
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>  
+            </svg>  
+        </button>  
+  
+        <!-- MAIN CONTENT -->  
+        <div class="flex-1 flex flex-col ml-0 lg:ml-64 overflow-hidden">  
+            <!-- TOP METRICS BAR -->  
+            <div class="bg-card-bg border-b border-border-color p-6 flex items-center justify-between">  
+                <div class="flex items-center space-x-6">  
+                    <div class="text-2xl font-bold">NIYANTRA</div>  
+                    <div id="topTasks" class="flex space-x-2 text-sm text-secondary-gray">  
+                        <span>Practice Vectors</span>  
+                        <span>|</span>  
+                        <span>Revise Thermodynamics</span>  
+                        <span>|</span>  
+                        <span>Test: Calculus</span>  
+                    </div>  
+                </div>  
+                <div class="flex items-center space-x-6">  
+                    <div class="text-right">  
+                        <div id="performancePct" class="text-2xl font-bold text-success-green">87%</div>  
+                        <div class="text-sm text-secondary-gray">Overall</div>  
+                    </div>  
+                    <div class="w-px h-8 bg-secondary-gray"></div>  
+                    <div class="text-center">  
+                        <div id="weakAreas" class="text-lg font-semibold text-weak-red">2</div>  
+                        <div class="text-sm text-secondary-gray">Weak Areas</div>  
+                    </div>  
+                    <div class="w-px h-8 bg-secondary-gray"></div>  
+                    <div class="text-center">  
+                        <div id="pendingTasks" class="text-lg font-semibold text-warning-orange">5</div>  
+                        <div class="text-sm text-secondary-gray">Pending</div>  
+                    </div>  
+                    <div class="w-px h-8 bg-secondary-gray"></div>  
+                    <div class="text-center">  
+                        <div id="nextRevision" class="text-lg font-semibold text-active-blue">Tomorrow</div>  
+                        <div class="text-sm text-secondary-gray">Revision Due</div>  
+                    </div>  
+                </div>  
+            </div>  
+  
+            <!-- MAIN LAYOUT -->  
+            <div class="flex-1 flex overflow-hidden">  
+                <!-- WORK AREA -->  
+                <div id="workArea" class="flex-1 p-8 overflow-y-auto">  
+                    <!-- Dynamic content loads here -->  
+                </div>  
+  
+                <!-- GRAPH ANALYTICS PANEL -->  
+                <div class="w-80 bg-card-bg border-l border-border-color p-6 hidden xl:block">  
+                    <h3 class="text-xl font-bold mb-6 flex items-center">  
+                        📊 Analytics  
+                        <button id="refreshGraphs" class="ml-auto p-2 hover:bg-active-blue/20 rounded-lg">  
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">  
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>  
+                            </svg>  
+                        </button>  
+                    </h3>  
+  
+                    <!-- Performance Trend -->  
+                    <div class="mb-8">  
+                        <div class="text-sm text-secondary-gray mb-3">Performance Trend</div>  
+                        <div class="canvas-container border border-secondary-gray rounded-lg bg-primary-bg p-4">  
+                            <canvas id="trendCanvas"></canvas>  
+                        </div>  
+                    </div>  
+  
+                    <!-- Subject Accuracy -->  
+                    <div class="mb-8">  
+                        <div class="text-sm text-secondary-gray mb-3">Subject Accuracy</div>  
+                        <div class="canvas-container border border-secondary-gray rounded-lg bg-primary-bg p-4">  
+                            <canvas id="accuracyCanvas"></canvas>  
+                        </div>  
+                    </div>  
+  
+                    <!-- Weakness Heatmap -->  
+                    <div>  
+                        <div class="text-sm text-secondary-gray mb-3">Weakness Heatmap</div>  
+                        <div class="space-y-2">  
+                            <div id="weaknessHeatmap"></div>  
+                        </div>  
+                    </div>  
+                </div>  
+            </div>  
+        </div>  
+    </div>  
+  
+    <script>  
+        // GLOBAL STATE  
+        let state = {  
+            name: 'Student',  
+            class: '12',  
+            exam: 'JEE',  
+            selectedSubject: 'Mathematics',  
+            studyEntries: [],  
+            testResults: [],  
+            performanceData: {  
+                Mathematics: 85,  
+                Physics: 78,  
+                Chemistry: 92,  
+                Biology: 88,  
+                'Computer Science': 76,  
+                English: 94  
+            },  
+            weakTopics: ['Vectors', 'Thermodynamics', 'Integration']  
+        };  
+  
+        // Initialize  
+        function init() {  
+            loadState();  
+            renderSidebar();  
+            renderMetrics();  
+            renderGraphs();  
+            updateWorkArea();  
+            setupEventListeners();  
+        }  
+  
+        // LocalStorage  
+        function saveState() {  
+            localStorage.setItem('niyantra_state', JSON.stringify(state));  
+        }  
+  
+        function loadState() {  
+            const saved = localStorage.getItem('niyantra_state');  
+            if (saved) {  
+                state = { ...state, ...JSON.parse(saved) };  
+            }  
+            document.getElementById('profileName').value = state.name;  
+            document.getElementById('classSelect').value = state.class;  
+            document.getElementById('examSelect').value = state.exam;  
+        }  
+  
+        // Sidebar Events  
+        function setupEventListeners() {  
+            // Profile  
+            document.getElementById('profileName').addEventListener('input', (e) => {  
+                state.name = e.target.value || 'Student';  
+                saveState();  
+                renderMetrics();  
+            });  
+  
+            // Selectors  
+            document.getElementById('classSelect').addEventListener('change', (e) => {  
+                state.class = e.target.value;  
+                saveState();  
+                updateWorkArea();  
+            });  
+  
+            document.getElementById('examSelect').addEventListener('change', (e) => {  
+                state.exam = e.target.value;  
+                saveState();  
+                updateWorkArea();  
+            });  
+  
+            // Subjects  
+            document.querySelectorAll('.subject-btn').forEach(btn => {  
+                btn.addEventListener('click', (e) => {  
+                    document.querySelector('.subject-btn.active')?.classList.remove('active', 'bg-active-blue/20', 'border-active-blue');  
+                    e.target.classList.add('active', 'bg-active-blue/20', 'border-active-blue');  
+                    state.selectedSubject = e.target.dataset.subject;  
+                    saveState();  
+                    updateWorkArea();  
+                });  
+            });  
+  
+            // Mode buttons  
+            document.querySelectorAll('.mode-btn').forEach(btn => {  
+                btn.addEventListener('click', (e) => {  
+                    document.querySelector('.mode-btn.active')?.classList.remove('active', 'bg-active-blue/20', 'bg-active-blue/30');  
+                    e.target.classList.add('active', 'bg-active-blue/20');  
+                    updateWorkArea();  
+                });  
+            });  
+  
+            // Mobile menu  
+            document.getElementById('mobileMenuBtn').addEventListener('click', () => {  
+                const sidebar = document.getElementById('sidebar');  
+                sidebar.classList.toggle('sidebar-hidden');  
+            });  
+  
+            // Graph refresh  
+            document.getElementById('refreshGraphs').addEventListener('click', renderGraphs);  
+        }  
+  
+        function renderSidebar() {  
+            document.querySelector('.subject-btn[data-subject="${state.selectedSubject}"]')?.classList.add('active', 'bg-active-blue/20', 'border-active-blue');  
+            document.querySelector('.mode-btn#learnMode').classList.add('active', 'bg-active-blue/20');  
+        }  
+  
+        // Metrics  
+        function renderMetrics() {  
+            document.getElementById('performancePct').textContent = '87%';  
+            document.getElementById('weakAreas').textContent = state.weakTopics.length;  
+            document.getElementById('pendingTasks').textContent = Math.floor(Math.random() * 10) + 3;  
+            document.getElementById('nextRevision').textContent = ['Today', 'Tomorrow', 'In 2 days'][Math.floor(Math.random() * 3)];  
+        }  
+  
+        // Graphs  
+        function renderGraphs() {  
+            renderTrendGraph();  
+            renderAccuracyGraph();  
+            renderWeaknessHeatmap();  
+        }  
+  
+        function renderTrendGraph() {  
+            const canvas = document.getElementById('trendCanvas');  
+            const ctx = canvas.getContext('2d');  
+            canvas.width = canvas.offsetWidth;  
+            canvas.height = canvas.offsetHeight;  
+  
+            const data = state.testResults.length ? state.testResults.map(r => r.score) : [60, 72, 81, 87, 92];  
+            const max = Math.max(...data, 100);  
+            const labels = state.testResults.map((_, i) => `T${i + 1}`);  
+  
+            ctx.clearRect(0, 0, canvas.width, canvas.height);  
+              
+            // Grid  
+            ctx.strokeStyle = '#1F2937';  
+            ctx.lineWidth = 1;  
+            for (let i = 0; i < 6; i++) {  
+                const y = (canvas.height - 40) * (5 - i) / 5;  
+                ctx.beginPath();  
+                ctx.moveTo(60, y);  
+                ctx.lineTo(canvas.width - 20, y);  
+                ctx.stroke();  
+            }  
+  
+            // Line  
+            ctx.strokeStyle = '#3B82F6';  
+            ctx.lineWidth = 3;  
+            ctx.lineJoin = 'round';  
+            ctx.lineCap = 'round';  
+            ctx.beginPath();  
+            data.forEach((value, i) => {  
+                const x = 80 + (canvas.width - 100) * i / (data.length - 1);  
+                const y = canvas.height - 30 - (canvas.height - 70) * value / max;  
+                if (i === 0) ctx.moveTo(x, y);  
+                else ctx.lineTo(x, y);  
+            });  
+            ctx.stroke();  
+  
+            // Dots  
+            data.forEach((value, i) => {  
+                const x = 80 + (canvas.width - 100) * i / (data.length - 1);  
+                const y = canvas.height - 30 - (canvas.height - 70) * value / max;  
+                ctx.fillStyle = '#3B82F6';  
+                ctx.beginPath();  
+                ctx.arc(x, y, 6, 0, Math.PI * 2);  
+                ctx.fill();  
+                ctx.fillStyle = '#0B0F1A';  
+                ctx.beginPath();  
+                ctx.arc(x, y, 3, 0, Math.PI * 2);  
+                ctx.fill();  
+            });  
+        }  
+  
+        function renderAccuracyGraph() {  
+            const canvas = document.getElementById('accuracyCanvas');  
+            const ctx = canvas.getContext('2d');  
+            canvas.width = canvas.offsetWidth;  
+            canvas.height = canvas.offsetHeight;  
+  
+            const subjects = Object.keys(state.performanceData);  
+            const data = subjects.map(s => state.performanceData[s]);  
+            const barWidth = (canvas.width - 60) / subjects.length;  
+            const maxHeight = canvas.height - 50;  
+  
+            ctx.clearRect(0, 0, canvas.width, canvas.height);  
+  
+            // Bars  
+            data.forEach((value, i) => {  
+                const x = 50 + i * barWidth + 5;  
+                const height = (maxHeight * value) / 100;  
+                const gradient = ctx.createLinearGradient(x, canvas.height, x, canvas.height - height);  
+                gradient.addColorStop(0, getPerformanceColor(value));  
+                gradient.addColorStop(1, getPerformanceColor(value, 0.7));  
+  
+                ctx.fillStyle = gradient;  
+                ctx.fillRect(x, canvas.height - height - 20, barWidth - 10, height + 20);  
+  
+                // Label  
+                ctx.fillStyle = 'white';  
+                ctx.font = '12px sans-serif';  
+                ctx.textAlign = 'center';  
+                ctx.fillText(subjects[i].slice(0, 3), x + barWidth / 2, canvas.height - 5);  
+                ctx.fillText(`${value}%`, x + barWidth / 2, canvas.height - height - 25);  
+            });  
+        }  
+  
+        function getPerformanceColor(value, alpha = 1) {  
+            if (value >= 85) return `rgba(16, 185, 129, ${alpha})`;  
+            if (value >= 70) return `rgba(245, 158, 11, ${alpha})`;  
+            return `rgba(239, 68, 68, ${alpha})`;  
+        }  
+  
+        function renderWeaknessHeatmap() {  
+            const container = document.getElementBy  
+Find out bugs
