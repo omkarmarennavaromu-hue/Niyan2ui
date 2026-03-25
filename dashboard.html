@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NIYANTRA - AI Study OS</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'primary-bg': '#0B0F1A',
+        'card-bg': '#111827',
+        'border-color': '#1F2937',
+        'weak-red': '#EF4444',
+        'warning-orange': '#F59E0B',
+        'success-green': '#10B981',
+        'active-blue': '#3B82F6',
+        'secondary-gray': '#9CA3AF'
+      }
+    }
+  }
+}
+</script>
+
+<style>
+* { transition: all 200ms ease; }
+.sidebar-hidden { transform: translateX(-110%); }
+canvas { width: 100% !important; height: 100% !important; }
+</style>
+</head>
+
+<body class="bg-primary-bg text-white overflow-hidden">
+
+<div class="flex h-screen">
+
+<!-- SIDEBAR -->
+<div id="sidebar"
+class="w-64 bg-card-bg border-r border-border-color flex flex-col p-6 fixed h-full lg:static lg:translate-x-0 sidebar-hidden lg:sidebar-visible z-40">
+
+<div class="mb-6">
+<div class="w-14 h-14 bg-active-blue rounded-full flex items-center justify-center font-bold">N</div>
+<input id="profileName" class="w-full bg-transparent border-b mt-3 p-2" placeholder="Name">
+</div>
+
+<select id="classSelect" class="w-full bg-gray-900 p-2 mb-4">
+<option>10</option><option selected>12</option>
+</select>
+
+<select id="examSelect" class="w-full bg-gray-900 p-2 mb-4">
+<option>JEE</option><option>NEET</option><option>NDA</option>
+</select>
+
+<div class="space-y-2">
+<button class="subject-btn" data-subject="Math">Math</button>
+<button class="subject-btn" data-subject="Physics">Physics</button>
+<button class="subject-btn" data-subject="Chemistry">Chemistry</button>
+</div>
+
+</div>
+
+<!-- MAIN -->
+<div class="flex-1 ml-0 lg:ml-64 flex flex-col">
+
+<!-- TOP -->
+<div class="p-4 bg-card-bg flex justify-between">
+<div class="font-bold">NIYANTRA</div>
+<div id="performancePct">87%</div>
+</div>
+
+<!-- WORK -->
+<div id="workArea" class="p-6 overflow-y-auto flex-1"></div>
+
+<!-- ANALYTICS -->
+<div class="w-80 hidden xl:block bg-card-bg p-4">
+<canvas id="trendCanvas"></canvas>
+<canvas id="accuracyCanvas"></canvas>
+<div id="weaknessHeatmap"></div>
+</div>
+
+</div>
+</div>
+
+<script>
+
+let state = {
+  selectedSubject: "Math",
+  selectedMode: "learn",
+  weakTopics: ["Vectors","Thermo","Integration"],
+  testResults: [10,20,30,40,50]
+};
+
+// INIT
+function init(){
+  setupEvents();
+  render();
+}
+
+function setupEvents(){
+
+document.querySelectorAll(".subject-btn").forEach(btn=>{
+  btn.onclick = () => {
+    state.selectedSubject = btn.dataset.subject;
+    render();
+  };
+});
+
+document.getElementById("profileName").oninput = e=>{
+  state.name = e.target.value;
+};
+
+document.getElementById("classSelect").onchange = render;
+document.getElementById("examSelect").onchange = render;
+
+window.addEventListener("resize", renderGraphs);
+
+}
+
+function render(){
+  updateWorkArea();
+  renderGraphs();
+  renderHeatmap();
+}
+
+function updateWorkArea(){
+
+const el = document.getElementById("workArea");
+
+el.innerHTML = `
+<h1 class="text-2xl font-bold mb-4">
+Learning: ${state.selectedSubject}
+</h1>
+
+<div class="bg-card-bg p-4 rounded">
+<ul class="space-y-2">
+<li>Concept 1 of ${state.selectedSubject}</li>
+<li>Concept 2 practice</li>
+<li>10 MCQs test</li>
+</ul>
+</div>
+`;
+}
+
+// GRAPH 1
+function renderGraphs(){
+
+const c = document.getElementById("trendCanvas");
+const ctx = c.getContext("2d");
+c.width = 300; c.height = 150;
+
+ctx.clearRect(0,0,300,150);
+ctx.strokeStyle = "#3B82F6";
+ctx.beginPath();
+
+state.testResults.forEach((v,i)=>{
+  ctx.lineTo(i*60,150-v);
+});
+
+ctx.stroke();
+
+// Accuracy
+const c2 = document.getElementById("accuracyCanvas");
+const ctx2 = c2.getContext("2d");
+c2.width=300; c2.height=150;
+
+ctx2.fillStyle="#10B981";
+ctx2.fillRect(20,150-80,30,80);
+ctx2.fillRect(80,150-60,30,60);
+ctx2.fillRect(140,150-100,30,100);
+
+}
+
+// HEATMAP
+function renderHeatmap(){
+const el = document.getElementById("weaknessHeatmap");
+
+el.innerHTML = state.weakTopics.map(t=>`
+<div class="p-2 bg-red-500/20 mb-2">${t}</div>
+`).join("");
+}
+
+init();
+
+</script>
+</body>
+</html>
