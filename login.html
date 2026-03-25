@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Niyantra | Exam Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #eef2ff 0%, #f9fafb 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease;
+    }
+
+    /* main app container */
+    #app {
+      width: 100%;
+      max-width: 1400px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    /* --- LOGIN CARD (Modern glass) --- */
+    .login-container {
+      width: 100%;
+      max-width: 520px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(0px);
+      border-radius: 2.5rem;
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 2rem 2rem 2.5rem;
+      transition: transform 0.2s, opacity 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    .login-title {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #1e2b6e, #2b3b8c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.3px;
+    }
+
+    .login-sub {
+      color: #4b5563;
+      margin-bottom: 2rem;
+      font-weight: 500;
+      border-left: 3px solid #3b82f6;
+      padding-left: 0.75rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .input-group label {
+      font-weight: 600;
+      color: #1f2937;
+      font-size: 0.9rem;
+    }
+
+    input, select {
+      padding: 0.9rem 1rem;
+      border-radius: 1.25rem;
+      border: 1.5px solid #e2e8f0;
+      background: #ffffff;
+      font-size: 1rem;
+      transition: all 0.2s;
+      outline: none;
+      font-weight: 500;
+      color: #0f172a;
+    }
+
+    input:focus, select:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+    }
+
+    .start-btn {
+      background: linear-gradient(105deg, #1e2f6e, #2b3e8a);
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 2rem;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1rem;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .start-btn:hover {
+      transform: scale(0.98);
+      background: linear-gradient(105deg, #162452, #1f3172);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .error-msg {
+      color: #dc2626;
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+      font-weight: 500;
+      background: #fee2e2;
+      padding: 0.4rem 1rem;
+      border-radius: 2rem;
+      display: inline-block;
+    }
+
+    /* --- DASHBOARD LAYOUT (modern sidebar + content) --- */
+    .dashboard-layout {
+      width: 100%;
+      background: #ffffff;
+      border-radius: 2rem;
+      box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      min-height: 85vh;
+      backdrop-filter: blur(0);
+      transition: opacity 0.4s ease, transform 0.2s;
+      animation: fadeSlideUp 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(12px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: #f8fafc;
+      width: 280px;
+      padding: 2rem 1.5rem;
+      border-right: 1px solid #e9edf2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .user-greeting {
+      margin-bottom: 2rem;
+    }
+
+    .greeting-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(120deg, #0f2b5e, #1e3a8a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1.2;
+    }
+
+    .user-badge {
+      background: #eef2ff;
+      border-radius: 2rem;
+      padding: 0.5rem 1rem;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #2563eb;
+      display: inline-block;
+    }
+
+    .exam-card-mini {
+      background: white;
+      border-radius: 1.25rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      border: 1px solid #e2edff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .logout-btn {
+      background: transparent;
+      border: 1.5px solid #e0e7ff;
+      padding: 0.8rem;
+      border-radius: 2rem;
+      font-weight: 700;
+      color: #b91c1c;
+      cursor: pointer;
+      margin-top: 2rem;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+
+    .logout-btn:hover {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      padding: 2rem 2.5rem;
+      background: white;
+    }
+
+    .welcome-header {
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #eef2ff;
+      padding-bottom: 1rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .stat-card {
+      background: #f1f5f9;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0f2b5e;
+      margin-top: 0.5rem;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, #fef9e6, #fff7ed);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      margin-top: 1.8rem;
+      border-left: 6px solid #f59e0b;
+    }
+
+    @media (max-width: 720px) {
+      .dashboard-layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e9edf2;
+      }
+      .main-content {
+        padding: 1.5rem;
+      }
+      .login-container {
+        padding: 1.5rem;
+      }
+    }
+
+    /* Transitions */
+    .fade-transition {
+      transition: opacity 0.35s ease-in-out;
+    }
+
+    .hidden-state {
+      display: none;
+    }
+
+    .visible-state {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+  // ---------- STORAGE KEYS ----------
+  const SESSION_KEY = "niyantra_session";
+
+  // ---------- Helper: session management ----------
+  function getSession() {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    try {
+      const session = JSON.parse(raw);
+      if (session && session.isLoggedIn === true) {
+        // basic integrity: ensure required fields
+        if (session.name && session.class && session.exam) {
+          return session;
+        } else {
+          // corrupted session
+          localStorage.removeItem(SESSION_KEY);
+          return null;
+        }
+      }
+      return null;
+    } catch(e) {
+      localStorage.removeItem(SESSION_KEY);
+      return null;
+    }
+  }
+
+  function saveSession(sessionObj) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(sessionObj));
+  }
+
+  function clearSession() {
+    localStorage.removeItem(SESSION_KEY);
+  }
+
+  // ----- UI state roots -----
+  let currentView = "login"; // "login" or "dashboard"
+  let appRoot = null;
+  let loginContainer = null;
+  let dashboardContainer = null;
+
+  // ----- Dashboard dynamic data (derived from session) -----
+  let activeSession = null;
+
+  // Helper to render dashboard content with fresh session
+  function renderDashboardUI(session) {
+    if (!dashboardContainer) return;
+    // Populate sidebar and main area dynamically based on session
+    const { name, class: studentClass, exam, loginTime } = session;
+    const formattedDate = new Date(loginTime).toLocaleString();
+    
+    // Build HTML structure
+    dashboardContainer.innerHTML = `
+      <div class="dashboard-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+          <div>
+            <div class="user-greeting">
+              <div class="greeting-name">⚡ ${escapeHtml(name)}</div>
+              <div class="user-badge">${escapeHtml(studentClass)}th Grade</div>
+            </div>
+            <div class="exam-card-mini">
+              <div style="font-weight:600; color:#1e40af;">🎯 Target Exam</div>
+              <div style="font-size:1.4rem; font-weight:800; margin-top:6px;">${escapeHtml(exam)}</div>
+              <div style="font-size:0.7rem; color:#4b5563; margin-top:8px;">Session active since</div>
+              <div style="font-size:0.7rem;">${formattedDate}</div>
+            </div>
+          </div>
+          <button id="logout-sidebar-btn" class="logout-btn">🚪 Logout & Exit</button>
+        </aside>
+
+        <!-- MAIN DASHBOARD CONTENT -->
+        <main class="main-content">
+          <div class="welcome-header">
+            <h1 style="font-size:1.8rem; font-weight:700;">Welcome back, ${escapeHtml(name)} 🎓</h1>
+            <p style="color:#4b5563; margin-top:0.5rem;">Your personalized dashboard • ${escapeHtml(exam)} aspirant</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Mock Tests</div>
+              <div class="stat-value">12</div>
+              <div style="font-size:0.75rem;">🔥 4 this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Study Streak</div>
+              <div class="stat-value">${Math.floor(Math.random() * 20) + 3} days</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Avg Score</div>
+              <div class="stat-value">${Math.floor(Math.random() * 30) + 65}%</div>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <h3 style="font-weight:800; margin-bottom:10px;">📘 Recommended for ${escapeHtml(exam)}</h3>
+            <p>Personalized practice sets based on your ${escapeHtml(studentClass)}th syllabus. Daily targets, video lectures, and previous year papers.</p>
+            <div style="margin-top:15px; display:flex; gap:12px; flex-wrap:wrap;">
+              <span style="background:#eef2ff; padding:5px 12px; border-radius:40px;">📅 Daily Planner</span>
+              <span style="background:#eef2ff; padding:5px 12px; border-radius:40px;">📊 Performance Analytics</span>
+              <span style="background:#eef2ff; padding:5px 12px; border-radius:40px;">🎯 AI Doubt Solver</span>
+            </div>
+          </div>
+          <div style="margin-top:2rem; font-size:0.85rem; color:#6c757d; border-top:1px solid #edf2f7; padding-top:1rem;">
+            ⚡ Niyantra • Seamless learning experience
+          </div>
+        </main>
+      </div>
+    `;
+
+    // Attach logout event to the button inside sidebar after rendering
+    const logoutBtn = document.getElementById('logout-sidebar-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        performLogout();
+      });
+    }
+  }
+
+  // simple escape to avoid XSS
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+      return c;
+    });
+  }
+
+  // Build login screen UI dynamically and attach events
+  function buildLoginScreen() {
+    if (!loginContainer) return;
+    loginContainer.innerHTML = `
+      <div class="login-container">
+        <div class="login-title">✧ Niyantra ✧</div>
+        <div class="login-sub">Your adaptive exam companion</div>
+        
+        <div class="input-group">
+          <label>Full Name</label>
+          <input type="text" id="login-name" placeholder="e.g., Aarav Sharma" autocomplete="off">
+        </div>
+        
+        <div class="input-group">
+          <label>Class</label>
+          <select id="login-class">
+            <option value="" disabled selected>Select your class</option>
+            <option value="6">6th Grade</option>
+            <option value="7">7th Grade</option>
+            <option value="8">8th Grade</option>
+            <option value="9">9th Grade</option>
+            <option value="10">10th Grade</option>
+            <option value="11">11th Grade</option>
+            <option value="12">12th Grade</option>
+          </select>
+        </div>
+        
+        <div class="input-group">
+          <label>Target Exam</label>
+          <select id="login-exam">
+            <option value="" disabled selected>Select your exam</option>
+            <option value="JEE">JEE (Main + Advanced)</option>
+            <option value="NEET">NEET (UG)</option>
+            <option value="NDA">NDA</option>
+            <option value="KCET">KCET</option>
+          </select>
+        </div>
+        
+        <button id="start-learning-btn" class="start-btn">🚀 Start Learning</button>
+        <div id="login-error-area" style="margin-top: 1rem; min-height: 2rem;"></div>
+      </div>
+    `;
+
+    const nameInput = document.getElementById('login-name');
+    const classSelect = document.getElementById('login-class');
+    const examSelect = document.getElementById('login-exam');
+    const startBtn = document.getElementById('start-learning-btn');
+    const errorArea = document.getElementById('login-error-area');
+
+    const showError = (msg) => {
+      errorArea.innerHTML = `<div class="error-msg">⚠️ ${msg}</div>`;
+    };
+    const clearError = () => { errorArea.innerHTML = ''; };
+
+    const handleLogin = () => {
+      clearError();
+      const name = nameInput ? nameInput.value.trim() : '';
+      const selectedClass = classSelect ? classSelect.value : '';
+      const selectedExam = examSelect ? examSelect.value : '';
+
+      if (!name) {
+        showError("Name cannot be empty");
+        return;
+      }
+      if (!selectedClass || selectedClass === "") {
+        showError("Please select your class");
+        return;
+      }
+      if (!selectedExam || selectedExam === "") {
+        showError("Please select your exam");
+        return;
+      }
+
+      // create session object
+      const newSession = {
+        isLoggedIn: true,
+        name: name,
+        class: selectedClass,
+        exam: selectedExam,
+        loginTime: new Date().toISOString()
+      };
+      saveSession(newSession);
+      activeSession = newSession;
+      // smooth transition: fade out login, show dashboard
+      switchToDashboardWithFade();
+    };
+
+    startBtn.addEventListener('click', handleLogin);
+    // optional enter key support
+    const inputs = [nameInput, classSelect, examSelect];
+    inputs.forEach(input => {
+      if (input) {
+        input.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') handleLogin();
+        });
+      }
+    });
+  }
+
+  // LOGOUT system: clear storage, reset active session, switch to login
+  function performLogout() {
+    clearSession();
+    activeSession = null;
+    // Transition to login with smoothness: first remove dashboard visibility, then show login
+    if (dashboardContainer) dashboardContainer.classList.add('hidden-state');
+    if (loginContainer) {
+      loginContainer.classList.remove('hidden-state');
+      // also ensure any stale errors are cleared, rebuild login ui or just refresh content?
+      // For consistency we rebuild login screen to clear any leftover fields (fresh state)
+      buildLoginScreen();
+    }
+    currentView = "login";
+    // small UI class adjustment for wrapper
+    if (appRoot) {
+      appRoot.style.opacity = '1';
+    }
+    // re-trigger any layout assurance
+  }
+
+  // Fade & Switch: login -> dashboard without reload
+  function switchToDashboardWithFade() {
+    if (!loginContainer || !dashboardContainer) return;
+    // apply opacity transition for smoothness
+    loginContainer.style.transition = "opacity 0.25s ease";
+    loginContainer.style.opacity = "0";
+    
+    setTimeout(() => {
+      loginContainer.classList.add('hidden-state');
+      loginContainer.style.opacity = "";
+      // Update dashboard with fresh session from activeSession or fetch from storage
+      const freshSession = getSession();
+      if (freshSession) {
+        activeSession = freshSession;
+        renderDashboardUI(activeSession);
+      } else if (activeSession) {
+        renderDashboardUI(activeSession);
+      } else {
+        // fallback: shouldn't happen, but if no session -> back to login
+        performLogout();
+        return;
+      }
+      dashboardContainer.classList.remove('hidden-state');
+      dashboardContainer.style.opacity = "0";
+      // force reflow + fade in
+      dashboardContainer.style.transition = "opacity 0.3s ease";
+      dashboardContainer.style.opacity = "1";
+      currentView = "dashboard";
+    }, 200);
+  }
+
+  // Auto-login handler: on every load checks localStorage and immediately shows correct view
+  function initAppWithAutoLogin() {
+    appRoot = document.getElementById('app');
+    if (!appRoot) return;
+
+    // Create two containers (login, dashboard) but both are children of #app
+    appRoot.innerHTML = `
+      <div id="login-screen-container" style="width:100%; display:flex; justify-content:center;"></div>
+      <div id="dashboard-screen-container" style="width:100%; display:flex; justify-content:center;"></div>
+    `;
+    loginContainer = document.getElementById('login-screen-container');
+    dashboardContainer = document.getElementById('dashboard-screen-container');
+
+    // Check session BEFORE any rendering logic
+    const existingSession = getSession();
+    
+    if (existingSession && existingSession.isLoggedIn === true) {
+      // Valid session -> directly load dashboard state, hide login
+      activeSession = existingSession;
+      // Build dashboard inside dashboard container
+      renderDashboardUI(activeSession);
+      // Ensure login container hidden, dashboard visible
+      loginContainer.classList.add('hidden-state');
+      dashboardContainer.classList.remove('hidden-state');
+      dashboardContainer.style.opacity = "1";
+      currentView = "dashboard";
+    } else {
+      // No session: show login only, dashboard hidden
+      // Build fresh login UI
+      buildLoginScreen();
+      loginContainer.classList.remove('hidden-state');
+      dashboardContainer.classList.add('hidden-state');
+      currentView = "login";
+      // ensure any old session remnant is purged
+      clearSession();
+      activeSession = null;
+    }
+    
+    // Add extra event to catch any manual logout from dashboard (already added inside renderDashboardUI)
+    // also optional window event for storage sync (if multiple tabs) but not mandatory for core spec
+    // ensure logout persists across refreshes by design (already)
+  }
+
+  // For robustness, re-check if dashboard logout button must be attached dynamically after re-renders
+  // However renderDashboardUI already attaches logout inside. 
+  // We also expose a global listener for any edge logout due to re-renders after session changes (none).
+  
+  // Add a safeguard that after any potential state corruption we still don't flicker.
+  window.addEventListener('load', () => {
+    initAppWithAutoLogin();
+    // Additional: listen to storage events (optional) to logout from other tabs? but not required, but nice
+    window.addEventListener('storage', (event) => {
+      if (event.key === SESSION_KEY) {
+        // session changed in another tab: re-evaluate current state
+        const newSession = getSession();
+        if (!newSession && currentView === 'dashboard') {
+          // forced logout from another tab, so perform logout locally without reload flicker
+          performLogout();
+        } else if (newSession && currentView === 'login') {
+          // someone logged in another tab, but we stick to spec: each tab independent, but we can auto-switch? 
+          // To avoid confusion, we keep current tab's session independent but we could optionally reload state. 
+          // Better to respect user session: if new session exists but we are in login and current session null, we should switch.
+          if (!activeSession && getSession()) {
+            // Reload state: switch to dashboard
+            const syncedSession = getSession();
+            if (syncedSession) {
+              activeSession = syncedSession;
+              renderDashboardUI(activeSession);
+              loginContainer.classList.add('hidden-state');
+              dashboardContainer.classList.remove('hidden-state');
+              currentView = 'dashboard';
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>
