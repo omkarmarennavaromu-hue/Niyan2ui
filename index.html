@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NIYANTRA — AI Discipline Operating System</title>
+  <meta name="description" content="NIYANTRA is a premium AI discipline and learning operating system for students preparing for JEE, KCET, NEET, NDA and UPSC." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: "#0B1220",
+            greyblock: "#1A2333",
+            card: "#121A28",
+            cream: "#F5EBD8",
+            accent: "#F4A261",
+            danger: "#B91C1C",
+            success: "#166534"
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            accent: ["Poppins", "sans-serif"]
+          },
+          boxShadow: {
+            glow: "0 0 0 1px rgba(244,162,97,.18), 0 22px 60px rgba(0,0,0,.28)",
+            soft: "0 18px 50px rgba(0,0,0,.24)",
+            accent: "0 0 0 1px rgba(244,162,97,.22), 0 12px 30px rgba(244,162,97,.12)"
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(244,162,97,.10), transparent 22%),
+        radial-gradient(circle at 80% 20%, rgba(245,235,216,.05), transparent 24%),
+        #0B1220;
+    }
+    .page-enter { opacity: 0; transform: translateY(18px); }
+    .page-enter.ready { opacity: 1; transform: translateY(0); transition: all .65s ease; }
+    .glass {
+      background: rgba(26, 35, 51, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(245,235,216,0.08);
+    }
+    .line-clamp-4 {
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .line-clamp-5 {
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -7px;
+      width: 100%;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(244,162,97,.95), transparent);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform .3s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after { transform: scaleX(1); }
+    .premium-border {
+      position: relative;
+      isolation: isolate;
+    }
+    .premium-border::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(120deg, rgba(244,162,97,.26), rgba(245,235,216,.10), rgba(244,162,97,.18));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: .75;
+      animation: borderGlow 4s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes borderGlow {
+      0% { filter: hue-rotate(0deg); opacity: .65; }
+      50% { opacity: .95; }
+      100% { filter: hue-rotate(8deg); opacity: .65; }
+    }
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: all .6s ease;
+    }
+    [data-reveal].show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="bg-navy text-cream overflow-x-hidden selection:bg-accent/30 selection:text-cream">
+  <div class="page-enter min-h-screen flex flex-col">
+    <header class="sticky top-0 z-50 border-b border-cream/10">
+      <div class="glass premium-border mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+          <a href="index.html" class="font-display text-xl font-bold tracking-[0.18em] text-cream">NIYANTRA</a>
+
+          <nav class="hidden md:flex items-center gap-8 text-sm text-cream/80">
+            <a href="index.html" class="nav-link active hover:text-accent transition-all duration-300">Home</a>
+            <a href="about.html" class="nav-link hover:text-accent transition-all duration-300">About</a>
+            <a href="features.html" class="nav-link hover:text-accent transition-all duration-300">Features</a>
+            <a href="login.html" class="rounded-full border border-cream/15 bg-greyblock/70 px-4 py-2 hover:border-accent/50 hover:text-accent transition-all duration-300 hover:shadow-accent">Login</a>
+          </nav>
+
+          <button id="mobileMenuBtn" class="md:hidden rounded-xl border border-cream/10 bg-greyblock/80 p-2 text-cream/90 transition-all duration-300 hover:border-accent/50 hover:text-accent" aria-label="Toggle menu">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+
+        <div id="mobileMenu" class="hidden md:hidden border-t border-cream/10 py-4">
+          <div class="flex flex-col gap-4 text-sm text-cream/80">
+            <a href="index.html" class="hover:text-accent transition-all duration-300">Home</a>
+            <a href="about.html" class="hover:text-accent transition-all duration-300">About</a>
+            <a href="features.html" class="hover:text-accent transition-all duration-300">Features</a>
+            <a href="login.html" class="hover:text-accent transition-all duration-300">Login</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <section class="relative mx-auto flex min-h-[78vh] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
+        <div class="absolute inset-x-0 top-10 -z-10 mx-auto h-64 w-64 rounded-full bg-accent/10 blur-3xl"></div>
+        <div class="w-full text-center" data-reveal>
+          <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-cream/10 bg-greyblock/60 px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-cream/70 shadow-soft">
+            <span class="h-2 w-2 rounded-full bg-success"></span>
+            AI Discipline + Learning OS
+          </div>
+          <h1 class="mx-auto max-w-4xl font-display text-4xl font-bold leading-tight text-cream sm:text-5xl md:text-6xl lg:text-7xl">
+            <span id="hero-greeting">Good Morning</span>, Builder of Discipline.
+          </h1>
+          <p class="mx-auto mt-6 max-w-3xl text-base leading-8 text-cream/70 sm:text-lg">
+            NIYANTRA is a premium learning system designed to convert intent into consistency. Build discipline, identify weaknesses, plan revision, and train for the exam that matters most.
+          </p>
+          <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a href="login.html" class="inline-flex items-center justify-center rounded-full bg-cream px-6 py-3 text-sm font-semibold text-navy transition-all duration-300 hover:scale-[1.02] hover:bg-accent hover:shadow-accent">
+              Enter NIYANTRA
+            </a>
+            <a href="#features-preview" class="inline-flex items-center justify-center rounded-full border border-cream/15 bg-greyblock/70 px-6 py-3 text-sm font-semibold text-cream transition-all duration-300 hover:scale-[1.02] hover:border-accent/50 hover:text-accent hover:shadow-lg">
+              Explore Features
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-4xl px-4 pb-10 sm:px-6 lg:px-8">
+        <div class="glass premium-border rounded-3xl px-6 py-8 text-center shadow-soft" data-reveal>
+          <p class="font-display text-xl text-cream sm:text-2xl">
+            "Discipline is not pressure. It is architecture."
+          </p>
+          <p class="mt-3 text-sm uppercase tracking-[0.24em] text-cream/45">
+            Build the system. The results will follow.
+          </p>
+        </div>
+      </section>
+
+      <section id="features-preview" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="mb-10 text-center" data-reveal>
+          <p class="font-accent text-sm uppercase tracking-[0.32em] text-accent">Core System</p>
+          <h2 class="mt-3 font-display text-3xl font-bold text-cream sm:text-4xl">A focused stack for serious preparation.</h2>
+          <p class="mx-auto mt-4 max-w-2xl text-cream/65">
+            Every module is designed to reduce chaos, preserve energy, and create repeatable execution.
+          </p>
+        </div>
+
+        <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <article class="group glass premium-border flex h-72 flex-col overflow-hidden rounded-3xl p-6 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-glow" data-reveal>
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m5-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="font-display text-xl font-semibold text-cream">Discipline Tracker</h3>
+            <p class="mt-4 flex-1 text-sm leading-7 text-cream/70 line-clamp-4">
+              Measure streaks, consistency and effort quality daily so your system rewards momentum instead of mood.
+            </p>
+            <div class="mt-4 text-sm font-medium text-accent">Track execution, not excuses.</div>
+          </article>
+
+          <article class="group glass premium-border flex h-72 flex-col overflow-hidden rounded-3xl p-6 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-glow" data-reveal>
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v11a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 class="font-display text-xl font-semibold text-cream">Study Planner</h3>
+            <p class="mt-4 flex-1 text-sm leading-7 text-cream/70 line-clamp-4">
+              Create balanced daily and weekly plans by subject, exam target and current difficulty load.
+            </p>
+            <div class="mt-4 text-sm font-medium text-accent">Clarity for every session.</div>
+          </article>
+
+          <article class="group glass premium-border flex h-72 flex-col overflow-hidden rounded-3xl p-6 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-glow" data-reveal>
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-4m3 4V7m3 10v-6m3 6V5M5 19h14" />
+              </svg>
+            </div>
+            <h3 class="font-display text-xl font-semibold text-cream">Weakness Analyzer</h3>
+            <p class="mt-4 flex-1 text-sm leading-7 text-cream/70 line-clamp-4">
+              Detect patterns in low-confidence chapters and convert them into targeted recovery plans.
+            </p>
+            <div class="mt-4 text-sm font-medium text-accent">Fix leakage before exams expose it.</div>
+          </article>
+
+          <article class="group glass premium-border flex h-72 flex-col overflow-hidden rounded-3xl p-6 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-glow" data-reveal>
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3M5 3h14a2 2 0 012 2v14l-4-2-3 2-3-2-3 2-3-2-4 2V5a2 2 0 012-2z" />
+              </svg>
+            </div>
+            <h3 class="font-display text-xl font-semibold text-cream">Revision System</h3>
+            <p class="mt-4 flex-1 text-sm leading-7 text-cream/70 line-clamp-4">
+              Schedule spaced revision loops so concepts return before they fade and remain exam-ready.
+            </p>
+            <div class="mt-4 text-sm font-medium text-accent">Retention becomes intentional.</div>
+          </article>
+
+          <article class="group glass premium-border flex h-72 flex-col overflow-hidden rounded-3xl p-6 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-glow" data-reveal>
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L6 20.75M18 6l-4.25 4.25M7 7h10M7 12h6M7 17h3" />
+              </svg>
+            </div>
+            <h3 class="font-display text-xl font-semibold text-cream">Exam Simulator</h3>
+            <p class="mt-4 flex-1 text-sm leading-7 text-cream/70 line-clamp-4">
+              Practice under pressure with timed sessions, structured question flow and post-test reflection.
+            </p>
+            <div class="mt-4 text-sm font-medium text-accent">Train for the room, not just the chapter.</div>
+          </article>
+
+          <article class="group glass premium-border flex h-72 flex-col overflow-hidden rounded-3xl p-6 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-glow" data-reveal>
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 9V5a2 2 0 114 0v4m-6 0h8a2 2 0 012 2v5a2 2 0 01-2 2H8a2 2 0 01-2-2v-5a2 2 0 012-2z" />
+              </svg>
+            </div>
+            <h3 class="font-display text-xl font-semibold text-cream">AI Learning Mode</h3>
+            <p class="mt-4 flex-1 text-sm leading-7 text-cream/70 line-clamp-4">
+              Ask, refine, simplify and rebuild understanding through an adaptive learning assistant made for exam prep.
+            </p>
+            <div class="mt-4 text-sm font-medium text-accent">Learn with precision, not noise.</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="grid gap-8 lg:grid-cols-[1.2fr_.8fr]">
+          <div class="glass premium-border rounded-3xl p-8 shadow-soft" data-reveal>
+            <p class="font-accent text-sm uppercase tracking-[0.28em] text-accent">Vision</p>
+            <h2 class="mt-4 font-display text-3xl font-bold text-cream sm:text-4xl">NIYANTRA is built to become the operating system of disciplined learning.</h2>
+            <div class="mt-6 space-y-5 text-base leading-8 text-cream/70">
+              <p>
+                Students do not usually fail because of lack of ambition. They fail because the structure around that ambition is weak. NIYANTRA solves that gap by turning planning, revision, weakness recovery and AI guidance into one premium system.
+              </p>
+              <p>
+                Instead of scattered notes, inconsistent schedules and reactive studying, NIYANTRA creates a clear loop: learn, practice, test, reflect and repeat. The result is a calmer mind, a cleaner process and stronger exam performance.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid gap-6" data-reveal>
+            <div class="glass premium-border rounded-3xl p-6 shadow-soft">
+              <p class="text-sm uppercase tracking-[0.22em] text-cream/55">Built for</p>
+              <p class="mt-4 font-display text-2xl font-semibold text-cream">JEE · KCET · NEET · NDA · UPSC</p>
+              <p class="mt-4 text-sm leading-7 text-cream/70">Different exams. One disciplined core system.</p>
+            </div>
+            <div class="glass premium-border rounded-3xl p-6 shadow-soft">
+              <p class="text-sm uppercase tracking-[0.22em] text-cream/55">Experience</p>
+              <p class="mt-4 text-sm leading-7 text-cream/70">
+                Minimal, responsive and intentionally focused — designed to feel like a premium AI product without visual noise.
+              </p>
+              <div class="mt-5 flex flex-wrap gap-3">
+                <span class="rounded-full border border-cream/10 bg-greyblock/70 px-3 py-1 text-xs text-cream/70">Glass UI</span>
+                <span class="rounded-full border border-cream/10 bg-greyblock/70 px-3 py-1 text-xs text-cream/70">Soft Glow</span>
+                <span class="rounded-full border border-cream/10 bg-greyblock/70 px-3 py-1 text-xs text-cream/70">Mobile First</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-cream/10">
+      <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div class="flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
+          <p class="text-sm text-cream/50">© 2026 NIYANTRA. Built for disciplined learners.</p>
+          <div class="flex items-center gap-5 text-sm text-cream/60">
+            <a href="about.html" class="hover:text-accent transition-all duration-300">About</a>
+            <a href="features.html" class="hover:text-accent transition-all duration-300">Features</a>
+            <a href="login.html" class="hover:text-accent transition-all duration-300">Get Started</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector(".page-enter").classList.add("ready");
+
+      const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      mobileMenuBtn?.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add("show");
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll("[data-reveal]").forEach(el => observer.observe(el));
+
+      // Dynamic greeting based on time of day
+      const greetingEl = document.getElementById("hero-greeting");
+      if (greetingEl) {
+        const hour = new Date().getHours();
+        let greeting;
+        if (hour >= 5 && hour < 12) {
+          greeting = "Good Morning";
+        } else if (hour >= 12 && hour < 16) {
+          greeting = "Good Afternoon";
+        } else if (hour >= 16 && hour < 20) {
+          greeting = "Good Evening";
+        } else {
+          greeting = "Good Night";
+        }
+        greetingEl.textContent = greeting;
+      }
+    });
+  </script>
+</body>
+</html>
