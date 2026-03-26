@@ -1,0 +1,168 @@
+/* ==========================================================
+   NIYANTRA — Dark Mode Overrides
+   Applied when <html> or <body> has class="dark"
+   or via prefers-color-scheme media query.
+   NIYANTRA's base theme is already dark (navy);
+   this file provides deeper contrast + midnight variant.
+   ========================================================== */
+
+/* ----------------------------------------------------------
+   1. Automatic OS-level dark mode
+   ---------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-navy:      #06090F;
+    --color-greyblock: #111827;
+    --color-card:      #0D1220;
+    --color-cream:     #EDE3D2;
+
+    /* Slightly muted accent in deep dark */
+    --color-accent:    #E8935A;
+    --accent-10:       rgba(232, 147, 90, 0.10);
+    --accent-18:       rgba(232, 147, 90, 0.18);
+    --accent-22:       rgba(232, 147, 90, 0.22);
+    --accent-50:       rgba(232, 147, 90, 0.50);
+
+    --cream-05:  rgba(237, 227, 210, 0.05);
+    --cream-08:  rgba(237, 227, 210, 0.08);
+    --cream-10:  rgba(237, 227, 210, 0.10);
+    --cream-15:  rgba(237, 227, 210, 0.14);
+  }
+}
+
+/* ----------------------------------------------------------
+   2. Manual dark class toggle  (.dark on <html> or <body>)
+   ---------------------------------------------------------- */
+.dark {
+  --color-navy:      #06090F;
+  --color-greyblock: #111827;
+  --color-card:      #0D1220;
+  --color-cream:     #EDE3D2;
+  --color-accent:    #E8935A;
+
+  --accent-10:  rgba(232, 147, 90, 0.10);
+  --accent-18:  rgba(232, 147, 90, 0.18);
+  --accent-22:  rgba(232, 147, 90, 0.22);
+  --accent-50:  rgba(232, 147, 90, 0.50);
+
+  --cream-05:  rgba(237, 227, 210, 0.05);
+  --cream-08:  rgba(237, 227, 210, 0.08);
+  --cream-10:  rgba(237, 227, 210, 0.10);
+  --cream-15:  rgba(237, 227, 210, 0.14);
+}
+
+/* ----------------------------------------------------------
+   3. Background override
+   ---------------------------------------------------------- */
+.dark body,
+@media (prefers-color-scheme: dark) { body } {
+  background-color: var(--color-navy);
+  background-image:
+    radial-gradient(circle at top,    rgba(232,147,90,0.08),  transparent 20%),
+    radial-gradient(circle at 80% 18%, rgba(237,227,210,0.04), transparent 22%);
+}
+
+/* ----------------------------------------------------------
+   4. Glass surface — deeper blur in deep dark
+   ---------------------------------------------------------- */
+.dark .glass {
+  background: rgba(13, 18, 32, 0.80);
+  border-color: rgba(237, 227, 210, 0.07);
+}
+
+/* ----------------------------------------------------------
+   5. Feature cards
+   ---------------------------------------------------------- */
+.dark .feature-card {
+  background: rgba(13, 18, 32, 0.76);
+}
+
+/* ----------------------------------------------------------
+   6. Stat / info cards
+   ---------------------------------------------------------- */
+.dark .stat-card,
+.dark .info-card,
+.dark .vision-card,
+.dark .quote-card {
+  background: rgba(13, 18, 32, 0.76);
+  border: 1px solid rgba(237, 227, 210, 0.07);
+}
+
+/* ----------------------------------------------------------
+   7. Navigation
+   ---------------------------------------------------------- */
+.dark .site-header {
+  border-bottom-color: rgba(237, 227, 210, 0.08);
+}
+
+.dark .nav-btn {
+  background: rgba(13, 18, 32, 0.75);
+}
+
+/* ----------------------------------------------------------
+   8. Sidebar
+   ---------------------------------------------------------- */
+.dark .sidebar {
+  background: rgba(6, 9, 15, 0.92);
+  border-right-color: rgba(237, 227, 210, 0.08);
+}
+
+/* ----------------------------------------------------------
+   9. Scrollbar styling (Webkit, dark mode)
+   ---------------------------------------------------------- */
+.dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--color-navy);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(244, 162, 97, 0.25);
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(244, 162, 97, 0.45);
+}
+
+/* ----------------------------------------------------------
+   10. Form inputs (dark surface)
+   ---------------------------------------------------------- */
+.dark input,
+.dark textarea,
+.dark select {
+  background: rgba(13, 18, 32, 0.80);
+  border: 1px solid rgba(237, 227, 210, 0.12);
+  color: var(--color-cream);
+  caret-color: var(--color-accent);
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgba(237, 227, 210, 0.35);
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  outline: none;
+  border-color: var(--accent-50);
+  box-shadow: 0 0 0 3px rgba(232, 147, 90, 0.12);
+}
+
+/* ----------------------------------------------------------
+   11. Progress bar in dark mode
+   ---------------------------------------------------------- */
+.dark .progress-bar {
+  background: rgba(237, 227, 210, 0.08);
+}
+
+/* ----------------------------------------------------------
+   12. Footer
+   ---------------------------------------------------------- */
+.dark .site-footer {
+  border-top-color: rgba(237, 227, 210, 0.08);
+}
